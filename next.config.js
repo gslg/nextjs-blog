@@ -1,8 +1,4 @@
-// module.exports = (phase, { defaultConfig }) => {
-//     return {
-//         optionalCatchAll: true
-//     }
-// }
+
 const compose = (plugins) => ({
     webpack(config, options) {
         return plugins.reduce((config, plugin) => {
@@ -39,7 +35,7 @@ const compose = (plugins) => ({
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')
 
-module.exports = compose([
+const configs = compose([
     [
         withBundleAnalyzer,
         {
@@ -47,3 +43,8 @@ module.exports = compose([
         },
     ],
 ])
+
+module.exports = {
+    optionalCatchAll: true,
+    ...configs
+}

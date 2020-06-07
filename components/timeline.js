@@ -10,7 +10,7 @@ export default function TimelimeLabelDemo({ blogs }) {
                 {
                     blogs.map(({ id, date, title }) => {
                         return <Timeline.Item label={parse(date)} key={id.join('.')}>
-                            <Link href={`/posts/${id.join('/')}`} as={`/posts/${id.join('/')}`}>
+                            <Link href={`/posts/[...id]`} as={`/posts/${id.join('/')}`}>
                                 <a>{title}</a>
                             </Link>
                         </Timeline.Item>
