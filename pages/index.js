@@ -14,7 +14,7 @@ export default function Home({ allPostsData }) {
       <section className={utilStyles.headingMd}>
         <p>[生命诚可贵,爱情价更高,若为自由故,两者皆可抛]</p>
         <p>
-          (使用<a href="https://nextjs.org/">Next.js</a>搭建的个人博客,.)
+          (使用<a href="https://nextjs.org/">Next.js</a>搭建的个人博客.)
         </p>
       </section>
 
