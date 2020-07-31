@@ -11,6 +11,12 @@ date: "2020-06-06"
 
 [Install Nginx](http://nginx.org/en/docs/install.html)
 
+## Nginx 进程
+```
+ps -ef|grep nginx
+```
+
+
 ## Nginx 反向代理
 
 <img src="/Users/guoliu/nextjs-blog/public/images/nginx/reverse-proxy.png" alt="reverse-proxy"  />
