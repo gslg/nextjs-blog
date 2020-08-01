@@ -12,12 +12,72 @@ date: "2020-06-06"
 [Install Nginx](http://nginx.org/en/docs/install.html)
 
 ## Nginx 进程
-```
+```shell
 ps -ef|grep nginx
 ```
 
+![nginx process](/home/liuguo/js_workspace/nextjs-blog/public/images/nginx/nginx-process.png)
 
-## Nginx 反向代理
+- nginx有一个主线程和至少一个工作进程
+- 如果启用了缓存，那么还有一个缓存管理的进程
+- 主进程的主要作用是是读取和计算配置文件，以及维护工作进程
+- 工作进程对请求进行实际处理
+- 工作进程的数量可以通过[worker_processes](https://nginx.org/en/docs/ngx_core_module.html?&_ga=2.246383111.222430574.1596171905-1734275440.1596171905#worker_processes)进行配置，可以设置为固定数量或者自动调整为可用的CPU内核数。
+
+## Nginx 一些重要的文件
+- /etc/nginx/
+    
+    NGINX服务的默认根目录
+
+- /etc/nginx/nginx.conf
+
+    NGINX服务配置的默认入口文件。该配置文件设置了全局配置，例如工作进程数，调优，日志，加载动态模块以及引用其他NGINX配置文件。在默认的nginx.conf中，包含了一个顶级的**http**块
+
+- /etc/nginx/conf.d/
+
+    包含了默认的HTTP服务配置文件。该目录下以 *.conf*结尾的文件都被 */etc/nginx/nginx.conf*文件中的**http**块引入。最佳实践就是利用这种方式组织各种配置，保持各个配置文件的精简。
+
+- /var/log/nginx/
+
+    NGINX默认的日志路径。默认配置下，该目录包含 *accss.log*和 *error.log*日志文件。
+
+## Nginx的一些用处
+
+### 静态内容服务
+
+```nginx
+server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    #redirect server error pages to the static page /50x.html
+    #error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+
+```
+```shell
+curl localhost
+```
+
+#### 简单的文件服务器
+```nginx
+location /fs/ {
+        alias /data1/minio/data/;
+        autoindex on;
+    }
+```
+```shell
+curl localhost/fs/
+```
+### Nginx 反向代理
 
 <img src="/Users/guoliu/nextjs-blog/public/images/nginx/reverse-proxy.png" alt="reverse-proxy"  />
 
@@ -33,7 +93,7 @@ NGINX 可以用作高效的反向代理服务器。
 
 - 其次反向代理可以提高灵活性( _flexibility_)和可伸缩性(_scalability_)。由于客户端只能看到反向代理的 IP 地址，因此我们可以自由更改后端基础结构的配置。如果后端 IP 地址经常更改，这将非常有用。
 
-## Nginx 网关
+### Nginx 网关
 
 ![api-gateway](/Users/guoliu/nextjs-blog/public/images/nginx/api-gateway.png)
 
@@ -50,7 +110,7 @@ NGINX API 网关提供了以下优点:
 
 此外，NGINX 使用 JWT(_JSON Web token_) 进行 API 认证。API 网关还可以通过速率限制来保护 API 免受请求和带宽限制的困扰。 最后，NGINX 是可定制的，可以使用 nginScript 或 Lua 模块进行服务器端脚本编写，以自定义 NGINX 满足独特的需求。
 
-## Nginx 负载均衡
+### Nginx 负载均衡
 
 ![load-balance](/Users/guoliu/nextjs-blog/public/images/nginx/load-balance.png)
 
@@ -61,7 +121,7 @@ NGINX 也可以用作高性能的负载均衡服务器。负载均衡将工作�
 
 - 负载均衡提供了冗余，因此如果一个服务器出现故障，其他服务器会介入以保持我们的应用程序正常运行。
 
-## Nginx 内容缓存
+### Nginx 内容缓存
 
 <img src="/Users/guoliu/nextjs-blog/public/images/nginx/cache.png" alt="cache" style="zoom:50%;" />
 
