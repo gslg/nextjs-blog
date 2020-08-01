@@ -99,6 +99,39 @@ Main上下文是根上下文
 
 [NGINX Mail Proxy](https://docs.nginx.com/nginx/admin-guide/mail-proxy/mail-proxy/)
 
+### Server Context
+
+#### 虚拟服务器(Virtual Server)
+
+在HTTP,Stream,Mail上下文中，都包括一个或多个**Server**块来定义控制请求处理的虚拟服务器。根据流量类型不同，Server可以包含不同的指令。
+
+对于HTTP(HTTP上下文)，Server块的指令控制对特定域名或IP地址上的资源请求的处理，Server块上下文中的一个或多个**location**上下文定义了如何处理特定的uri集合。
+
+对于邮件和TCP/UDP通信流(邮件和Stream上下文)，Server块的指令控制到达特定TCP端口或UNIX套接字的通信流的处理。
+
+- 配置ip端口
+- 配置域名
+- 配置Unix socket
+
+### Location Context
+根据请求的URI决定如何响应。
+
+```nginx
+location /one {
+    # configuration for processing URIs starting with '/one'
+} 
+```
+
+### Upstream Context
+定义一组后台应用服务，用于负载均衡
+```nginx
+upstream myServers {
+    server 127.0.0.1:8081;
+    server 127.0.0.1:8082;
+    server 127.0.0.1:8083;
+}
+```
+
 ### 多上下文示例
 ```nginx
 user nobody; # a directive in the 'main' context
